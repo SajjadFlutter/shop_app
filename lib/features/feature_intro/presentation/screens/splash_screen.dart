@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/common/widgets/loading_animation.dart';
 import 'package:shop_app/features/feature_intro/presentation/bloc/splash_cubit/splash_cubit.dart';
-import 'package:shop_app/features/feature_intro/presentation/screens/intor_main_wrapper.dart';
+import 'package:shop_app/features/feature_intro/presentation/screens/intro_main_wrapper.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shop_app/features/feature_intro/presentation/bloc/splash_cubit/splash_cubit.dart';
-import 'package:shop_app/features/feature_intro/presentation/screens/intor_main_wrapper.dart';
+import 'package:shop_app/features/feature_intro/presentation/screens/intro_main_wrapper.dart';
 import 'package:shop_app/features/feature_intro/presentation/screens/splash_screen.dart';
 
 void main() {
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       ],
       initialRoute: '/',
       routes: {
-        IntroMainWrapper.routeName: (context) => const IntroMainWrapper(),
+        IntroMainWrapper.routeName: (context) => IntroMainWrapper(),
       },
       home: const SplashScreen(),
     );
