@@ -39,210 +39,209 @@ class _HomeScreenState extends State<HomeScreen> {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
-    return SafeArea(
-      child: BlocProvider(
-        create: (context) => HomeCubit(locator<HomeRepository>()),
-        child: Builder(builder: (context) {
-          // call api
-          BlocProvider.of<HomeCubit>(context).callHomeDataEvent();
+    return BlocProvider(
+      create: (context) => HomeCubit(locator<HomeRepository>()),
+      child: Builder(builder: (context) {
+        // call api
+        BlocProvider.of<HomeCubit>(context).callHomeDataEvent();
 
-          return BlocBuilder<HomeCubit, HomeState>(
-            buildWhen: (previous, current) {
-              if (previous.homeDataStatus == current.homeDataStatus) {
-                return false;
-              }
-              return true;
-            },
-            builder: (context, state) {
-              // Loading
-              if (state.homeDataStatus is HomeDataLoading) {
-                return const LoadingAnimation(size: 40.0);
-              }
-              // Completed
-              if (state.homeDataStatus is HomeDataCompleted) {
-                HomeDataCompleted homeDataCompleted =
-                    state.homeDataStatus as HomeDataCompleted;
-                HomeModel homeModel = homeDataCompleted.homeModel;
+        return BlocBuilder<HomeCubit, HomeState>(
+          buildWhen: (previous, current) {
+            if (previous.homeDataStatus == current.homeDataStatus) {
+              return false;
+            }
+            return true;
+          },
+          builder: (context, state) {
+            // Loading
+            if (state.homeDataStatus is HomeDataLoading) {
+              return const LoadingAnimation(size: 40.0);
+            }
+            // Completed
+            if (state.homeDataStatus is HomeDataCompleted) {
+              HomeDataCompleted homeDataCompleted =
+                  state.homeDataStatus as HomeDataCompleted;
+              HomeModel homeModel = homeDataCompleted.homeModel;
 
-                _timer ??= Timer.periodic(
-                  const Duration(seconds: 3),
-                  (timer) {
-                    if (_currentSlide < homeModel.data!.sliders!.length - 1) {
-                      _currentSlide++;
-                    } else {
-                      _currentSlide = 0;
-                    }
+              _timer ??= Timer.periodic(
+                const Duration(seconds: 3),
+                (timer) {
+                  if (_currentSlide < homeModel.data!.sliders!.length - 1) {
+                    _currentSlide++;
+                  } else {
+                    _currentSlide = 0;
+                  }
 
-                    if (pageViewController.positions.isNotEmpty) {
-                      pageViewController.animateToPage(_currentSlide,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeIn);
-                    }
-                  },
-                );
+                  if (pageViewController.positions.isNotEmpty) {
+                    pageViewController.animateToPage(_currentSlide,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeIn);
+                  }
+                },
+              );
 
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      // sliders
-                      homeModel.data!.sliders!.isNotEmpty
-                          ? SizedBox(
-                              width: width,
-                              height: Responsive.isMobile(context) ? 180 : 320,
-                              child: PageView.builder(
-                                itemCount: homeModel.data!.sliders!.length,
-                                controller: pageViewController,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    margin: const EdgeInsets.all(10.0),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      child: CachedNetworkImage(
-                                        imageUrl: homeModel
-                                            .data!.sliders![index].img!,
-                                        placeholder: (context, url) =>
-                                            const LoadingAnimation(size: 30.0),
-                                        fit: BoxFit.fill,
-                                        useOldImageOnUrlChange: true,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            )
-                          : Container(),
-
-                      // page indicator
-                      homeModel.data!.sliders!.length > 1
-                          ? SmoothPageIndicator(
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: height*0.03),
+                    // sliders
+                    homeModel.data!.sliders!.isNotEmpty
+                        ? SizedBox(
+                            width: width,
+                            height: Responsive.isMobile(context) ? 180 : 320,
+                            child: PageView.builder(
+                              itemCount: homeModel.data!.sliders!.length,
                               controller: pageViewController,
-                              count: homeModel.data!.sliders!.length,
-                              effect: ExpandingDotsEffect(
-                                dotHeight: width * 0.02,
-                                dotWidth: width * 0.02,
-                                activeDotColor: Colors.redAccent,
-                                spacing: 5.0,
-                              ),
-                            )
-                          : Container(),
-
-                      SizedBox(height: height * 0.03),
-
-                      // 8 categories
-                      homeModel.data!.categories!.isNotEmpty
-                          ? SizedBox(
-                              height: 220,
-                              child: GridView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 4,
-                                  crossAxisSpacing: 0,
-                                  mainAxisSpacing: 8.0,
-                                ),
-                                itemCount: homeModel.data!.categories!.length,
-                                itemBuilder: (context, index) {
-                                  final image =
-                                      homeModel.data!.categories![index].img;
-                                  final title =
-                                      homeModel.data!.categories![index].title;
-
-                                  return DeepLinks(
-                                      image: image!, title: title!);
-                                },
-                              ),
-                            )
-                          : Container(),
-
-                      SizedBox(height: height * 0.03),
-
-                      /// middle banners
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Column(
-                          children: [
-                            (homeModel.data!.banners!.isNotEmpty)
-                                ? GestureDetector(
-                                    onTap: () {
-                                      // Navigator.pushNamed(context, SellerScreen.routeName);
-                                      // if(homeModel.data!.banners![0].categoryId != null){
-                                      //   Navigator.pushNamed(
-                                      //     context,
-                                      //     AllProductsScreen.routeName,
-                                      //     arguments: ProductsArguments(categoryId: homeModel.data!.banners![0].categoryId!),);
-                                      // }
-                                    },
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            homeModel.data!.banners![0].image!,
-                                        placeholder: (context, string) {
-                                          return const LoadingAnimation(
-                                              size: 35.0);
-                                        },
-                                        height: Responsive.isMobile(context)
-                                            ? 160
-                                            : 320,
-                                        width: width,
-                                        fit: BoxFit.cover,
-                                        useOldImageOnUrlChange: true,
-                                      ),
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  margin: const EdgeInsets.all(10.0),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl: homeModel
+                                          .data!.sliders![index].img!,
+                                      placeholder: (context, url) =>
+                                          const LoadingAnimation(size: 30.0),
+                                      fit: BoxFit.fill,
+                                      useOldImageOnUrlChange: true,
                                     ),
-                                  )
-                                : Container(),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : Container(),
 
-                            SizedBox(height: height * 0.02),
-                            //
-                            (homeModel.data!.banners!.length > 1)
-                                ? GestureDetector(
-                                    onTap: () {
-                                      // if(homeModel.data!.banners![1].categoryId != null){
-                                      //   Navigator.pushNamed(
-                                      //     context,
-                                      //     AllProductsScreen.routeName,
-                                      //     arguments: ProductsArguments(categoryId: homeModel.data!.banners![1].categoryId!),);
-                                      // }
-                                    },
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            homeModel.data!.banners![1].image!,
-                                        placeholder: (context, string) {
-                                          return const LoadingAnimation(
-                                              size: 35.0);
-                                        },
-                                        height: Responsive.isMobile(context)
-                                            ? 160
-                                            : 320,
-                                        width: width,
-                                        fit: BoxFit.cover,
-                                        useOldImageOnUrlChange: true,
-                                      ),
+                    // page indicator
+                    homeModel.data!.sliders!.length > 1
+                        ? SmoothPageIndicator(
+                            controller: pageViewController,
+                            count: homeModel.data!.sliders!.length,
+                            effect: ExpandingDotsEffect(
+                              dotHeight: width * 0.02,
+                              dotWidth: width * 0.02,
+                              activeDotColor: Colors.redAccent,
+                              spacing: 5.0,
+                            ),
+                          )
+                        : Container(),
+
+                    SizedBox(height: height * 0.01),
+
+                    // 8 categories
+                    homeModel.data!.categories!.isNotEmpty
+                        ? SizedBox(
+                            height: 250,
+                            child: GridView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4,
+                                crossAxisSpacing: 0,
+                                mainAxisSpacing: 8.0,
+                              ),
+                              itemCount: homeModel.data!.categories!.length,
+                              itemBuilder: (context, index) {
+                                final image =
+                                    homeModel.data!.categories![index].img;
+                                final title =
+                                    homeModel.data!.categories![index].title;
+
+                                return DeepLinks(
+                                    image: image!, title: title!);
+                              },
+                            ),
+                          )
+                        : Container(),
+
+                    SizedBox(height: height * 0.03),
+
+                    /// middle banners
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Column(
+                        children: [
+                          (homeModel.data!.banners!.isNotEmpty)
+                              ? GestureDetector(
+                                  onTap: () {
+                                    // Navigator.pushNamed(context, SellerScreen.routeName);
+                                    // if(homeModel.data!.banners![0].categoryId != null){
+                                    //   Navigator.pushNamed(
+                                    //     context,
+                                    //     AllProductsScreen.routeName,
+                                    //     arguments: ProductsArguments(categoryId: homeModel.data!.banners![0].categoryId!),);
+                                    // }
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          homeModel.data!.banners![0].image!,
+                                      placeholder: (context, string) {
+                                        return const LoadingAnimation(
+                                            size: 35.0);
+                                      },
+                                      height: Responsive.isMobile(context)
+                                          ? 160
+                                          : 320,
+                                      width: width,
+                                      fit: BoxFit.cover,
+                                      useOldImageOnUrlChange: true,
                                     ),
-                                  )
-                                : Container(),
-                          ],
-                        ),
+                                  ),
+                                )
+                              : Container(),
+
+                          SizedBox(height: height * 0.02),
+                          //
+                          (homeModel.data!.banners!.length > 1)
+                              ? GestureDetector(
+                                  onTap: () {
+                                    // if(homeModel.data!.banners![1].categoryId != null){
+                                    //   Navigator.pushNamed(
+                                    //     context,
+                                    //     AllProductsScreen.routeName,
+                                    //     arguments: ProductsArguments(categoryId: homeModel.data!.banners![1].categoryId!),);
+                                    // }
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          homeModel.data!.banners![1].image!,
+                                      placeholder: (context, string) {
+                                        return const LoadingAnimation(
+                                            size: 35.0);
+                                      },
+                                      height: Responsive.isMobile(context)
+                                          ? 160
+                                          : 320,
+                                      width: width,
+                                      fit: BoxFit.cover,
+                                      useOldImageOnUrlChange: true,
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                        ],
                       ),
-                      (homeModel.data!.banners!.isNotEmpty ||
-                              homeModel.data!.banners!.length > 1)
-                          ? const SizedBox(height: 20)
-                          : Container(),
-                    ],
-                  ),
-                );
-              }
-              // Error
-              if (state.homeDataStatus is HomeDataError) {
-                return const Text('Error');
-              }
-              return Container();
-            },
-          );
-        }),
-      ),
+                    ),
+                    (homeModel.data!.banners!.isNotEmpty ||
+                            homeModel.data!.banners!.length > 1)
+                        ? const SizedBox(height: 20)
+                        : Container(),
+                  ],
+                ),
+              );
+            }
+            // Error
+            if (state.homeDataStatus is HomeDataError) {
+              return const Text('Error');
+            }
+            return Container();
+          },
+        );
+      }),
     );
   }
 }
