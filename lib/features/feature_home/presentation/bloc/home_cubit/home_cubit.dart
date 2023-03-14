@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+// ignore: depend_on_referenced_packages
 import 'package:meta/meta.dart';
 import 'package:shop_app/common/resources/data_state.dart';
 import 'package:shop_app/features/feature_home/data/models/home_model.dart';
