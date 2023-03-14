@@ -1,9 +1,12 @@
 import 'package:delayed_widget/delayed_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/common/utils/prefs_operator.dart';
 import 'package:shop_app/common/widgets/loading_animation.dart';
+import 'package:shop_app/common/widgets/main_wrapper.dart';
 import 'package:shop_app/features/feature_intro/presentation/bloc/splash_cubit/splash_cubit.dart';
 import 'package:shop_app/features/feature_intro/presentation/screens/intro_main_wrapper.dart';
+import 'package:shop_app/locator.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -88,14 +91,25 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> goToHome() async {
+    PrefsOperator prefsOperator = locator<PrefsOperator>();
+    final isShowIntroScreen = await prefsOperator.getShowState();
+
     Future.delayed(
       const Duration(seconds: 3),
       () {
-        Navigator.pushNamedAndRemoveUntil(
+        if (isShowIntroScreen) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            IntroMainWrapper.routeName,
+            ModalRoute.withName('/intro_main_wrapper'),
+          );
+        } else {
+          Navigator.pushNamedAndRemoveUntil(
           context,
-          IntroMainWrapper.routeName,
-          ModalRoute.withName('/intro_main_wrapper'),
+          MainWrapper.routeName,
+          ModalRoute.withName('/main_wrapper'),
         );
+        }
       },
     );
   }

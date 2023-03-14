@@ -44,6 +44,10 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   smooth_page_indicator: ^1.0.1
   shimmer: ^2.0.0
+  shared_preferences: ^2.0.18
+  get_it: ^7.2.0
+  dio: ^5.0.2
+  flutter_svg: ^2.0.3
 
 dev_dependencies:
   flutter_test:

@@ -1,9 +1,11 @@
-import 'package:delayed_widget/delayed_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/common/utils/prefs_operator.dart';
+import 'package:shop_app/common/widgets/main_wrapper.dart';
 import 'package:shop_app/features/feature_intro/presentation/bloc/intro_cubit/intro_cubit.dart';
 import 'package:shop_app/features/feature_intro/presentation/widgets/get_start_btn.dart';
 import 'package:shop_app/features/feature_intro/presentation/widgets/intro_page.dart';
+import 'package:shop_app/locator.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class IntroMainWrapper extends StatelessWidget {
@@ -85,7 +87,15 @@ class IntroMainWrapper extends StatelessWidget {
                         pageController: pageController,
                         text: 'شروع کن',
                         onTap: () {
-                          print('ok');
+                          PrefsOperator prefsOperator =
+                              locator<PrefsOperator>();
+                          prefsOperator.changeIntroState();
+
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            MainWrapper.routeName,
+                            ModalRoute.withName('/main_wrapper'),
+                          );
                         },
                       );
                     } else {

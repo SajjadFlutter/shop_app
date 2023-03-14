@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shop_app/common/widgets/main_wrapper.dart';
 import 'package:shop_app/features/feature_intro/presentation/bloc/splash_cubit/splash_cubit.dart';
 import 'package:shop_app/features/feature_intro/presentation/screens/intro_main_wrapper.dart';
 import 'package:shop_app/features/feature_intro/presentation/screens/splash_screen.dart';
+import 'package:shop_app/locator.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // init locator
+  await initLocator();
   runApp(
     MultiBlocProvider(
       providers: [
@@ -37,6 +43,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         IntroMainWrapper.routeName: (context) => IntroMainWrapper(),
+        MainWrapper.routeName: (context) => MainWrapper(),
       },
       home: const SplashScreen(),
     );
