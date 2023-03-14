@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/common/widgets/bottom_nav.dart';
+import 'package:shop_app/features/feature_home/presentation/screens/home_screen.dart';
 
 class MainWrapper extends StatelessWidget {
   static String routeName = '/main_wrapper';
@@ -8,7 +9,7 @@ class MainWrapper extends StatelessWidget {
   final PageController pageController = PageController();
 
   final List<Widget> topLevelScreens = [
-    Container(color: Colors.redAccent),
+    const HomeScreen(),
     Container(color: Colors.blueAccent),
     Container(color: Colors.green),
     Container(color: Colors.amber),
