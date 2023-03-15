@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(height: height * 0.03),
+                    SizedBox(height: height * 0.01),
                     // sliders
                     homeModel.data!.sliders!.isNotEmpty
                         ? SizedBox(
@@ -365,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          primary: Colors.amber.shade800),
+                          backgroundColor: Colors.redAccent),
                       onPressed: () {
                         /// call all data again
                         BlocProvider.of<HomeCubit>(context).callHomeDataEvent();

@@ -20,9 +20,16 @@ class MainWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: pageController,
-        children: topLevelScreens,
+      body: Column(
+        children: [
+          const SizedBox(height: 20.0),
+          Expanded(
+            child: PageView(
+              controller: pageController,
+              children: topLevelScreens,
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNav(controller: pageController),
     );
