@@ -5,6 +5,8 @@ import 'package:shop_app/common/utils/prefs_operator.dart';
 import 'package:shop_app/features/feature_home/data/data_source/remote/home_api_provider.dart';
 import 'package:shop_app/features/feature_home/repository/home_repository.dart';
 import 'package:shop_app/features/feature_product/data/data_source/remote/category_api_provider.dart';
+import 'package:shop_app/features/feature_product/data/data_source/remote/products_api_provider.dart';
+import 'package:shop_app/features/feature_product/repository/all_products_repository.dart';
 import 'package:shop_app/features/feature_product/repository/category_repository.dart';
 
 GetIt locator = GetIt.instance;
@@ -21,8 +23,12 @@ Future<void> initLocator() async {
   locator.registerSingleton<HomeApiProvider>(HomeApiProvider(locator()));
   locator
       .registerSingleton<CategoryApiProvider>(CategoryApiProvider(locator()));
+  locator
+      .registerSingleton<ProductsApiProvider>(ProductsApiProvider(locator()));
 
   // repository
   locator.registerSingleton<HomeRepository>(HomeRepository(locator()));
   locator.registerSingleton<CategoryRepository>(CategoryRepository(locator()));
+  locator.registerSingleton<AllProductsRepository>(
+      AllProductsRepository(locator()));
 }

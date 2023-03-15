@@ -94,7 +94,6 @@ class _HomeScreenState extends State<HomeScreen> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(height: height * 0.01),
                     // sliders
                     homeModel.data!.sliders!.isNotEmpty
                         ? SizedBox(

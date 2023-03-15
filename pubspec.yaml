@@ -50,6 +50,7 @@ dependencies:
   flutter_svg: ^2.0.3
   cached_network_image: ^3.2.3
   flutter_rating_bar: ^4.0.1
+  flutter_typeahead: ^4.3.7
 
 dev_dependencies:
   flutter_test:
