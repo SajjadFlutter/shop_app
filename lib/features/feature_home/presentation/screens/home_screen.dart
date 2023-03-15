@@ -271,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       imageUrl:
                                           homeModel.data!.banners![2].image!,
                                       placeholder: (context, string) {
-                                        return LoadingAnimation(size: 35.0);
+                                        return const LoadingAnimation(size: 35.0);
                                       },
                                       height: Responsive.isMobile(context)
                                           ? 160
